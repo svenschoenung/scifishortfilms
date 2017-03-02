@@ -1,3 +1,5 @@
-var config = require('./config.json');
+var config = require('./config.prod.json');
 
-module.exports = config;
+module.exports = Object.assign(config, {
+  /* additional config options */
+});

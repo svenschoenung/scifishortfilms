@@ -1,8 +1,8 @@
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var jeditor = require('gulp-json-editor');
-var rename = require('gulp-rename');
-var merge = require('merge-stream');
+var replace = require('gulp-replace');
+var gulpif = require('gulp-if');
 
 var webpack = require('webpack-stream');
 var webpack2 = require('webpack');
@@ -64,18 +64,14 @@ gulp.task('prod:config', function(cb) {
   if (bundles.length != 1) {
     return cb('Wrong number of bundles found: ' + bundles);
   }
- 
-  var configJson = gulp.src('src/server/config/config.prod.json')
-    .pipe(jeditor(function(config) {
+
+  return gulp.src(['src/server/config/*', '!src/server/config/*.dev.*'])
+    .pipe(gulpif('**/config.prod.json', jeditor(function(config) {
       return Object.assign(config, {
         bundle: path.basename(bundles[0])
       });
-    }))
-    .pipe(rename('config.json'));
-  var configJs = gulp.src('src/server/config/config.prod.js')
-    .pipe(rename('config.js'));
-
-  return merge(configJson, configJs)
+    })))
+    .pipe(gulpif('**/config.js', replace('config.dev', 'config.prod')))
     .pipe(gulp.dest('dist/server/server/config'));
 });
 
