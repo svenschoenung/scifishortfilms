@@ -1,30 +1,23 @@
 import express from 'express';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 
 import App from '../common/components/App.jsx';
+import Index from './templates/Index.jsx';
 import config from './config/config.js';
 
-const app = express();
+const server= express();
 
-app.get('/', (req, res) => {
-  const reactRoot = renderToString(<App />);
+server.get('/', (req, res) => {
+  const app = renderToString(<App />);
+  const index = renderToStaticMarkup(
+    <Index app={app} config={config}/>
+  );
 
-  res.send(`<!DOCTYPE html>
-    <html>
-      <head>
-        <title>App</title>
-      </head>
-      
-      <body>
-        <div id="app">${reactRoot}</div>
-        <script src="/${config.bundle}"></script>
-      </body>
-    </html>
-  `);
+  res.send('<!DOCTYPE html>' + index);
 });
 
-app.listen(config.port, function(err) {
+server.listen(config.port, function(err) {
   if (err) {
     console.err(err);
     return;
