@@ -12,6 +12,7 @@ var webpackConfig = require('./webpack.config.js');
 
 var path = require('path');
 var glob = require('glob');
+var del  = require('del');
 var open = require('open');
 
 gulp.task('dev:server', function(cb) {
@@ -49,6 +50,10 @@ gulp.task('dev', gulp.series(
   gulp.parallel('dev:client', 'dev:server'),
   'dev:browser'
 ));
+
+gulp.task('prod:clean', function() {
+  return del(['dist/']);
+});
 
 gulp.task('prod:client', function() {
   var config = webpackConfig('prod');
@@ -94,6 +99,7 @@ gulp.task('prod:server', function() {
 });
 
 gulp.task('prod', gulp.series(
+  'prod:clean', 
   'prod:client', 
   gulp.parallel('prod:server', 'prod:deps', 'prod:config')
 ));
