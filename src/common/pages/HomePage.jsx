@@ -1,5 +1,10 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 
 export default function HomePage() {
-  return <div>Home page</div>;
+  return (
+    <main id="home">
+      <Helmet title="Sci-fi Short Films"/>
+    </main>
+  );
 };
