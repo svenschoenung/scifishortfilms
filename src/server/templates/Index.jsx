@@ -9,11 +9,21 @@ export default function Index({app, config, head, state}) {
       document.getElementsByTagName('head')[0].appendChild(script);
     })();
   `;
+   var style = `
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+    body {
+      background-color: #f2f2f2;
+    }
+  `;
  
   return (
     <html>
     <head>
       {head.title.toComponent()}
+      <style dangerouslySetInnerHTML={{__html:style}}/>
     </head>
     <body>
       <div id="app" dangerouslySetInnerHTML={{__html:app}}/>
