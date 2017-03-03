@@ -19,6 +19,7 @@
     "gulp-json-editor": "^2.2.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-replace": "^0.5.4",
+    "gulp-shell": "^0.6.1",
     "open": "0.0.5",
     "react-dom": "^15.4.2",
     "webpack": "^2.2.1",

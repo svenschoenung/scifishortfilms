@@ -3,6 +3,7 @@ var nodemon = require('gulp-nodemon');
 var jeditor = require('gulp-json-editor');
 var replace = require('gulp-replace');
 var gulpif = require('gulp-if');
+var shell = require('gulp-shell');
 
 var webpack = require('webpack-stream');
 var webpack2 = require('webpack');
@@ -75,6 +76,12 @@ gulp.task('prod:config', function(cb) {
     .pipe(gulp.dest('dist/server/server/config'));
 });
 
+gulp.task('prod:deps', shell.task([
+  'mkdir -p dist/server/node_modules',
+  'cp package.json dist/server/node_modules',
+  'npm install --prod --prefix dist/server/node_modules'
+]));
+
 gulp.task('prod:server', function() {
   var stream = gulp.src([
     'src/server.js',
@@ -88,7 +95,7 @@ gulp.task('prod:server', function() {
 
 gulp.task('prod', gulp.series(
   'prod:client', 
-  gulp.parallel('prod:server', 'prod:config')
+  gulp.parallel('prod:server', 'prod:deps', 'prod:config')
 ));
 
 gulp.task('default', gulp.series('prod'));
