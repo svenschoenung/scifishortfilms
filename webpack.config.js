@@ -11,12 +11,14 @@ var envConfig = {
       'webpack/hot/dev-server',
       entry
     ],
-    filename: 'app.js',
+    bundle: 'app.js',
+    filename: '[name].[ext]',
     publicPath: 'http://localhost:' + port + '/'
   },
   prod: {
     entry: [entry],
-    filename: 'app_[hash].js',
+    bundle: 'app_[hash].js',
+    filename: '[name]_[hash].[ext]',
     publicPath: 'http://scifishortfilms.com/'
   }
 }
@@ -28,7 +30,7 @@ module.exports = function(env) {
     },
     output: {
       path: __dirname + '/' + dist,
-      filename: envConfig[env].filename,
+      filename: envConfig[env].bundle,
       publicPath: envConfig[env].publicPath
     },
     plugins: [
@@ -41,11 +43,11 @@ module.exports = function(env) {
         loader: 'babel-loader?presets=es2015&presets=react&cacheDirectory=.cache',
       }, {
         test: /fonts.*\.(eot|svg|ttf|woff|woff2)$/i,
-        loader: 'file-loader?name=fonts/[name].[ext]'
+        loader: 'file-loader?name=fonts/' + envConfig[env].filename,
       }, {
         test: /imgs.*\.(gif|png|jpe?g|svg)$/i,
         loaders: [
-         'file-loader?name=imgs/[name].[ext]',
+         'file-loader?name=imgs/' + envConfig[env].filename,
          'image-webpack-loader'
        ]
       }]
