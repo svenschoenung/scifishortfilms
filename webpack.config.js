@@ -39,6 +39,15 @@ module.exports = function(env) {
         test: /\.jsx$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader?presets=es2015&presets=react&cacheDirectory=.cache',
+      }, {
+        test: /fonts.*\.(eot|svg|ttf|woff|woff2)$/i,
+        loader: 'file-loader?name=fonts/[name].[ext]'
+      }, {
+        test: /imgs.*\.(gif|png|jpe?g|svg)$/i,
+        loaders: [
+         'file-loader?name=imgs/[name].[ext]',
+         'image-webpack-loader'
+       ]
       }]
     },
     devServer: {
@@ -49,7 +58,7 @@ module.exports = function(env) {
       contentBase: dist,
       hot: true,
       proxy: {
-        '!**/*.(js|css)': 'http://localhost:7000/'
+        '!**/*.(js|css|eot|svg|ttf|woff|woff2)': 'http://localhost:7000/'
       },
       open: true
     }
