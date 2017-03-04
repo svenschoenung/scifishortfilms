@@ -4,6 +4,7 @@ var replace = require('gulp-replace');
 var rename = require('gulp-rename');
 var gulpif = require('gulp-if');
 var shell = require('gulp-shell');
+var zip = require('gulp-zip');
 
 var webpack = require('webpack-stream');
 var webpack2 = require('webpack');
@@ -94,10 +95,23 @@ gulp.task('prod:server', function() {
   return stream.pipe(gulp.dest('dist/server'));
 });
 
+gulp.task('prod:zip-client', function() {
+  return gulp.src('dist/client/**', { base:'dist/' })
+    .pipe(zip('client.zip'))
+    .pipe(gulp.dest('dist/'))
+});
+
+gulp.task('prod:zip-server', function() {
+  return gulp.src('dist/server/**', { base: 'dist/' })
+    .pipe(zip('server.zip'))
+    .pipe(gulp.dest('dist/'))
+});
+
 gulp.task('prod', gulp.series(
   'prod:clean', 
   'prod:client', 
-  gulp.parallel('prod:server', 'prod:deps', 'prod:config', 'prod:manifest')
+  gulp.parallel('prod:server', 'prod:deps', 'prod:config', 'prod:manifest'),
+  gulp.parallel('prod:zip-client', 'prod:zip-server')
 ));
 
 gulp.task('default', gulp.series('prod'));
