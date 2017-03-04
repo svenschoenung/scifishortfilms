@@ -60,9 +60,13 @@ gulp.task('prod:client', function() {
     .pipe(gulp.dest(config.output.path));
 });
 
-gulp.task('prod:config', function(cb) {
+gulp.task('prod:manifest', function() {
+  return gulp.src('dist/client/manifest.json')
+    .pipe(gulp.dest('dist/server/server/'));
+});
+
+gulp.task('prod:config', function() {
   var stream = gulp.src([
-    'dist/client/manifest.json',
     'src/server/config/*',
     '!src/server/config/*.dev.*'
   ]);
@@ -93,7 +97,7 @@ gulp.task('prod:server', function() {
 gulp.task('prod', gulp.series(
   'prod:clean', 
   'prod:client', 
-  gulp.parallel('prod:server', 'prod:deps', 'prod:config')
+  gulp.parallel('prod:server', 'prod:deps', 'prod:config', 'prod:manifest')
 ));
 
 gulp.task('default', gulp.series('prod'));

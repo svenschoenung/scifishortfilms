@@ -7,7 +7,7 @@ export default class ManifestProvider extends Component {
   }
 
   getChildContext() {
-    return { manifest: file => (this.manifest[file] || file) };
+    return { manifest: this.manifest };
   }
 
   render() {
@@ -16,7 +16,7 @@ export default class ManifestProvider extends Component {
 }
 
 ManifestProvider.propTypes = {
-  manifest: PropTypes.object.isRequired
+  manifest: PropTypes.func.isRequired
 }
 ManifestProvider.childContextTypes = {
   manifest: PropTypes.func.isRequired

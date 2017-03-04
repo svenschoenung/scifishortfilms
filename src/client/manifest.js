@@ -1,4 +1,9 @@
-const manifest = window.__MANIFEST__ || {};
+const manifestEntries = window.__MANIFEST__ || {};
 delete window.__MANIFEST__;
 
-export default manifest;
+export default function manifest(file) {
+  if (!file) {
+    return manifestEntries;
+  }
+  return manifestEntries[file] || file;
+}

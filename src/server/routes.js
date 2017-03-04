@@ -13,7 +13,7 @@ import Index from './templates/Index.jsx';
 
 import reducers from '../common/store/reducers.js';
 import config from './config/config.js';
-import manifest from './config/manifest.js';
+import manifest from './manifest.js';
 
 const renderErrorPage = (error, req, res) => {
    res.status(500).send(error.message)
@@ -35,7 +35,7 @@ server.use((req, res) => {
       try {
         const store = createStore(reducers, {});
         const app = renderToString(
-          <ManifestProvider manifest={manifest()}>
+          <ManifestProvider manifest={manifest}>
             <Provider store={store}>
               <RouterContext {...renderProps} />
             </Provider>
