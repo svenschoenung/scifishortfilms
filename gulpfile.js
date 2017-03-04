@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
-var jeditor = require('gulp-json-editor');
 var replace = require('gulp-replace');
+var rename = require('gulp-rename');
 var gulpif = require('gulp-if');
 var shell = require('gulp-shell');
 
@@ -10,8 +10,6 @@ var webpack2 = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require('./webpack.config.js');
 
-var path = require('path');
-var glob = require('glob');
 var del  = require('del');
 var open = require('open');
 
@@ -63,21 +61,15 @@ gulp.task('prod:client', function() {
 });
 
 gulp.task('prod:config', function(cb) {
-  var output = webpackConfig('prod').output;
-  var bundles = glob.sync(output.path + '/' +
-    output.filename.replace('[hash]', '*'));
-  
-  if (bundles.length != 1) {
-    return cb('Wrong number of bundles found: ' + bundles);
-  }
+  var stream = gulp.src([
+    'dist/client/manifest.json',
+    'src/server/config/*',
+    '!src/server/config/*.dev.*'
+  ]);
 
-  return gulp.src(['src/server/config/*', '!src/server/config/*.dev.*'])
-    .pipe(gulpif('**/config.prod.json', jeditor(function(config) {
-      return Object.assign(config, {
-        bundle: path.basename(bundles[0])
-      });
-    })))
-    .pipe(gulpif('**/config.js', replace('config.dev', 'config.prod')))
+  return stream
+    .pipe(gulpif('**/config.js', replace('config.dev', 'config')))
+    .pipe(gulpif('**/config.prod.json', rename('config.json')))
     .pipe(gulp.dest('dist/server/server/config'));
 });
 

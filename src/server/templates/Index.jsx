@@ -1,11 +1,14 @@
 import React from 'react';
 
-export default function Index({app, config, head, state}) {
+const toJson = (obj) => JSON.stringify(obj).replace(/</g, '\\u003c');
+
+export default function Index({app, manifest, head, state}) {
   var script = `
-    window.__STORE_STATE__ = ${JSON.stringify(state).replace(/</g, '\\u003c')};
+    window.__MANIFEST__ = ${toJson(manifest())};
+    window.__STORE__ = ${toJson(state)};
     (function() {
       var script = document.createElement('script');
-      script.setAttribute('src', '/${config.bundle}');
+      script.setAttribute('src', '/${manifest("app.js")}');
       document.getElementsByTagName('head')[0].appendChild(script);
     })();
   `;

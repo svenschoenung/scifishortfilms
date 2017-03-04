@@ -1,1 +1,2 @@
-module.exports = require('./config.dev.js');
+const config = require('./config.dev.json');
+export default config;

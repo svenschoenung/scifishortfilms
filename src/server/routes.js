@@ -7,11 +7,13 @@ import Helmet from 'react-helmet';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 
+import ManifestProvider from '../common/ManifestProvider.jsx';
 import AppRoutes from '../common/AppRoutes.jsx';
 import Index from './templates/Index.jsx';
 
-import config from './config/config.js';
 import reducers from '../common/store/reducers.js';
+import config from './config/config.js';
+import manifest from './config/manifest.js';
 
 const renderErrorPage = (error, req, res) => {
    res.status(500).send(error.message)
@@ -20,8 +22,6 @@ const renderErrorPage = (error, req, res) => {
 const renderRedirect = (redirect, req, res) => {
    res.redirect(302, redirect.pathname + redirect.search)
 };
-
-
 
 const server = express();
 
@@ -35,14 +35,16 @@ server.use((req, res) => {
       try {
         const store = createStore(reducers, {});
         const app = renderToString(
-          <Provider store={store}>
-            <RouterContext {...renderProps} />
-          </Provider>
+          <ManifestProvider manifest={manifest()}>
+            <Provider store={store}>
+              <RouterContext {...renderProps} />
+            </Provider>
+          </ManifestProvider>
         );
         const head = Helmet.rewind();
         const state = store.getState();
         const index = renderToStaticMarkup(
-          <Index app={app} config={config} head={head} state={state}/>
+          <Index app={app} manifest={manifest} head={head} state={state}/>
         );
         res.status(200).send('<!DOCTYPE html>' + index)
 

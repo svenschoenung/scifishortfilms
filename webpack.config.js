@@ -1,4 +1,5 @@
 var webpack2 = require('webpack');
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 var port = 8000;
 var entry = './src/client.jsx';
@@ -34,7 +35,8 @@ module.exports = function(env) {
       publicPath: envConfig[env].publicPath
     },
     plugins: [
-      new webpack2.HotModuleReplacementPlugin()
+      new webpack2.HotModuleReplacementPlugin(),
+      new ManifestPlugin()
     ],
     module: {
       loaders: [{
