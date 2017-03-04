@@ -14,6 +14,35 @@ var webpackConfig = require('./webpack.config.js');
 var del  = require('del');
 var open = require('open');
 
+// Hack: wait for backend express server to be
+//       available again after nodemon restart
+//
+// Based on this gist:
+// https://gist.github.com/icodeforlove/ae10b31d1a180577b815
+(function () {
+	var Server = require('webpack-dev-server/lib/Server');
+	var	sendStats = Server.prototype._sendStats;
+
+  function trySendingStats(self, args) {
+    var req = {
+      hostname: 'localhost',
+      port: require('./src/server/config/config.dev.json').port,
+      path: '/'
+    };
+    require('http')
+      .get(req, function() {
+        sendStats.apply(self, args);
+      })
+      .on('error', function() {
+        setTimeout(() => trySendingStats(self, args), 50)
+      });
+  }
+
+	Server.prototype._sendStats = function () {
+    trySendingStats(this, arguments);
+	};
+})();
+
 gulp.task('dev:server', function(cb) {
   var server = nodemon({
     script: 'src/server.js',
