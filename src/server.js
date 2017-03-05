@@ -1,5 +1,3 @@
-require('babel-core/register')({
-  presets: ['es2015', 'react']
-});
+console.log('NODE_ENV=' + process.env.NODE_ENV);
 
 require('./server/routes.js');

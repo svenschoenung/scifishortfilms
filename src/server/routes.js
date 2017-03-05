@@ -12,7 +12,7 @@ import AppRoutes from '../common/AppRoutes.jsx';
 import Index from './templates/Index.jsx';
 
 import reducers from '../common/store/reducers.js';
-import config from './config/config.js';
+import config from './config.js';
 import manifest from './manifest.js';
 
 const renderErrorPage = (error, req, res) => {
@@ -26,6 +26,8 @@ const renderRedirect = (redirect, req, res) => {
 const server = express();
 
 server.use((req, res) => {
+
+console.log(req.url);
   const handler = (error, redirect, renderProps) => {
     if (error) {
       renderErrorPage(error, req, res);

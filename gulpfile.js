@@ -9,8 +9,6 @@ var zip = require('gulp-zip');
 var webpack = require('webpack-stream');
 var webpack2 = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var webpackConfig = require('./webpack.config.js');
-
 var del  = require('del');
 var open = require('open');
 
@@ -26,7 +24,7 @@ var open = require('open');
   function trySendingStats(self, args) {
     var req = {
       hostname: 'localhost',
-      port: require('./src/server/config/config.dev.json').port,
+      port: require('./config/server.dev.json').port,
       path: '/'
     };
     require('http')
@@ -34,6 +32,7 @@ var open = require('open');
         sendStats.apply(self, args);
       })
       .on('error', function() {
+        console.log('failed for: localhost:' + req.port);
         setTimeout(() => trySendingStats(self, args), 50)
       });
   }
@@ -43,24 +42,46 @@ var open = require('open');
 	};
 })();
 
-gulp.task('dev:server', function(cb) {
-  var server = nodemon({
-    script: 'src/server.js',
-    ext: 'js jsx json',
-    watch: ['src/server.js', 'src/server', 'src/common']
-  });
+function env(environment) {
+  process.env.NODE_ENV = environment;
+}
 
-  var started = false;
-  return server.on('start', function () {
-    if (!started) {
-      started = true;
-      cb();
+gulp.task('dev:server', function(cb) {
+  env('development');
+
+  var config = require('./webpack/webpack.server.js');
+
+  var server;
+  webpack2(config).watch({ignored: /node_modules/}, function(err, stats) {
+    if (err) {
+      return cb(err);
     }
-  })
+    console.log(stats.toString());
+
+    var started = false;
+    if (!server) {
+      server = nodemon({
+        script: 'build/server/server.js',
+        args: ['--config', __dirname + '/config/server.dev.json'],
+        ext: 'dummy-ext',
+        watch: ['dummy-dir']
+      })
+      server.on('start', function () {
+        if (!started) {
+          started = true;
+          cb();
+        }
+      });
+    } else {
+      server.restart();
+    }
+  });
 });
 
 gulp.task('dev:client', function(cb) {
-  var config = webpackConfig('dev');
+  env('development');
+
+  var config = require('./webpack/webpack.client.js');
   var compiler = webpack2(config);
   var server = new WebpackDevServer(compiler, config.devServer);
   server.listen(config.devServer.port, function() {
@@ -69,13 +90,14 @@ gulp.task('dev:client', function(cb) {
 });
 
 gulp.task('dev:browser', function(cb) {
-  var config = webpackConfig('dev');
+  var config = require('./webpack/webpack.client.js');
   open('http://localhost:' + config.devServer.port);
   cb();
 });
 
 gulp.task('dev', gulp.series(
-  gulp.parallel('dev:client', 'dev:server'),
+  'dev:server',
+  'dev:client',
   'dev:browser'
 ));
 

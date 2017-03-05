@@ -1,20 +1,14 @@
 import React from 'react';
 import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
 
 export default class App extends React.Component {
   render() {
-    var app = {
-      borderTop: '5px solid black',
-      maxWidth: '1000px',
-      margin: '0px auto',
-      background: 'white',
-      boxShadow: '0px 0px 5px #888',
-      padding: '20px'
-    }
     return (
-      <div style={app}>
+      <div className="app">
       <Header/>
       {this.props.children}
+      <Footer/>
       </div>
     );
   }

@@ -1,9 +1,4 @@
-var manifestEntries;
-try {
-  manifestEntries = require('./manifest.json');
-} catch (e) {
-  manifestEntries = {}; 
-}
+var manifestEntries = require('./manifest.json');
 
 export default function manifest(file) {
   if (!file) {

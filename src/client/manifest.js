@@ -1,5 +1,7 @@
-const manifestEntries = window.__MANIFEST__ || {};
-delete window.__MANIFEST__;
+const manifestEntries = {
+  'fonts/futura.ttf': require('./fonts/futura.ttf'),
+  'imgs/scifishortfilms.svg': require('./imgs/scifishortfilms.svg')
+};
 
 export default function manifest(file) {
   if (!file) {
