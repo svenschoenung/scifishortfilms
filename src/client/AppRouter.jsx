@@ -10,7 +10,7 @@ import manifest from './manifest.js';
 
 export default function AppRouter() {
   return (
-    <ManifestProvider manifest={manifest}>
+    <ManifestProvider manifest={manifest} insertCss={() => {}}>
       <Provider store={store}>
         <Router routes={AppRoutes} history={browserHistory}/>
       </Provider>

@@ -1,23 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router';
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import styles from './Footer.css';
 
-export default function Footer(props) {
-  var footer = {
-    background: 'black',
-    color: 'white',
-    padding: '20px',
-    fontFamily: 'Futura',
-    fontWeight: '0px',
-    fontSize: '20px'
-  };
+const Footer = (props) => {
   return (
-    <footer style={footer}>
-      <ul>
+    <footer className={styles.websiteFooter}>
+      <ul className={styles.websiteSections}>
         <li><Link to="/reviews">REVIEWS</Link></li>
-        <li>FEATURES</li>
-        <li>NEWS</li>
-        <li>FILMS</li>
+        <li><Link to="/features">FEATURES</Link></li>
+        <li><Link to="/news">NEWS</Link></li>
+        <li><Link to="/films">FILMS</Link></li>
       </ul>
     </footer>
   );
-}
+};
+
+export default withStyles(styles)(Footer);

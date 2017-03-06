@@ -4,10 +4,11 @@ export default class ManifestProvider extends Component {
   constructor(props, context) {
     super(props, context);
     this.manifest = props.manifest;
+    this.insertCss = props.insertCss;
   }
 
   getChildContext() {
-    return { manifest: this.manifest };
+    return { manifest: this.manifest, insertCss: this.insertCss };
   }
 
   render() {
@@ -16,8 +17,10 @@ export default class ManifestProvider extends Component {
 }
 
 ManifestProvider.propTypes = {
-  manifest: PropTypes.func.isRequired
-}
+  manifest: PropTypes.func.isRequired,
+  insertCss: PropTypes.func.isRequired
+};
 ManifestProvider.childContextTypes = {
-  manifest: PropTypes.func.isRequired
+  manifest: PropTypes.func.isRequired,
+  insertCss: PropTypes.func.isRequired
 };

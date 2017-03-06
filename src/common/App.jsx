@@ -2,14 +2,17 @@ import React from 'react';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <div className="app">
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import styles from './App.css';
+
+const App = (props) => {
+  return (
+    <div className={styles.app}>
       <Header/>
-      {this.props.children}
+      {props.children}
       <Footer/>
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default withStyles(styles)(App);

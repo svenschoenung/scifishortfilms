@@ -38,7 +38,9 @@ jspm_packages
 
 # Build folders
 dist
+build
 .cache
+.lein-repl-history
 
 # Swap files
 *.swp
