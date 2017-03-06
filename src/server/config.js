@@ -1,11 +1,4 @@
-var fs = require('fs');
+var readJsonSync = require('./util/readJsonSync.js');
 var argv = require('yargs').argv;
 
-var config;
-try {
-  config = JSON.parse(fs.readFileSync(argv.config).toString());
-} catch (e) {
-  config = {};
-}
-
-module.exports = config;
+module.exports = readJsonSync(argv.config);

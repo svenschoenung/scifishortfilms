@@ -1,4 +1,7 @@
-var manifestEntries = require('./manifest.json');
+var readJsonSync = require('./util/readJsonSync.js');
+var argv = require('yargs').argv;
+
+var manifestEntries = readJsonSync(argv.manifest);
 
 export default function manifest(file) {
   if (!file) {

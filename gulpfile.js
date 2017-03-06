@@ -116,19 +116,13 @@ gulp.task('prod:client', function() {
 
 gulp.task('prod:manifest', function() {
   return gulp.src('dist/client/manifest.json')
-    .pipe(gulp.dest('dist/server/server/'));
+    .pipe(gulp.dest('dist/server/'));
 });
 
 gulp.task('prod:config', function() {
-  var stream = gulp.src([
-    'src/server/config/*',
-    '!src/server/config/*.dev.*'
-  ]);
-
-  return stream
-    .pipe(gulpif('**/config.js', replace('config.dev', 'config')))
-    .pipe(gulpif('**/config.prod.json', rename('config.json')))
-    .pipe(gulp.dest('dist/server/server/config'));
+  return gulp.src('config/server.prod.json')
+    .pipe(rename('config.json'))
+    .pipe(gulp.dest('dist/server/'));
 });
 
 gulp.task('prod:deps', shell.task([
@@ -139,15 +133,10 @@ gulp.task('prod:deps', shell.task([
 
 gulp.task('prod:server', function() {
   env('production');
-
-  var stream = gulp.src([
-    'src/server.js',
-    'src/server/**',
-    '!src/server/config/**',
-    'src/common/**',
-  ], { base: 'src' })
-
-  return stream.pipe(gulp.dest('dist/server'));
+  var config = require('./webpack/webpack.server.js');
+  return gulp.src(config.entry.app)
+    .pipe(webpack(config, webpack2))
+    .pipe(gulp.dest(config.output.path));
 });
 
 gulp.task('prod:zip-client', function() {
