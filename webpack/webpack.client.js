@@ -1,6 +1,17 @@
 const webpack2 = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var webpackConfig = require('./webpack.js')();
+var { webpackConfig, cssLoaderOptions } = require('./webpack.js')();
+
+webpackConfig.module.loaders.push({
+  test: /\.css$/,
+  exclude: /(node_modules|bower_components)/,
+  loader: ExtractTextPlugin.extract({
+    use: [ 'css-loader?modules=true' + cssLoaderOptions ]
+  })
+});
+
+webpackConfig.plugins.push(new ExtractTextPlugin("app.css"));
 
 if (process.env.NODE_ENV == 'production') {
   var clientConfig = require('../config/client.prod.json');
@@ -25,9 +36,7 @@ if (process.env.NODE_ENV == 'development') {
   webpackConfig.output.publicPath = 'http://localhost:' + clientConfig.port + '/';
   webpackConfig.output.filename = 'app.js';
   webpackConfig.output.path = __dirname + '/../build/client';
-  webpackConfig.plugins = [
-      new webpack2.HotModuleReplacementPlugin()
-  ];
+  webpackConfig.plugins.push(new webpack2.HotModuleReplacementPlugin());
   webpackConfig.devServer = {
     inline: true,
     compress: false, 

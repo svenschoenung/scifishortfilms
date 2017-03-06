@@ -1,7 +1,16 @@
 var webpack2 = require('webpack');
 var fs = require('fs');
 
-var webpackConfig = require('./webpack.js')();
+var { webpackConfig, cssLoaderOptions } = require('./webpack.js')();
+
+webpackConfig.module.loaders.push({
+  test: /\.css$/,
+  exclude: /(node_modules|bower_components)/,
+  loaders: [
+    'isomorphic-style-loader',
+    'css-loader?modules=true' + cssLoaderOptions,
+  ]
+});
 
 webpackConfig.entry.app = './src/server.js'
 webpackConfig.output.filename = 'server.js';

@@ -1,4 +1,4 @@
-const webpack2 = require('webpack');
+var webpack2 = require('webpack');
 
 module.exports = function() {
   if (process.env.NODE_ENV === 'production') {
@@ -12,9 +12,10 @@ module.exports = function() {
     var cssLoaderOptions = '';
   }
 
-  return {
+  var webpackConfig = {
     entry: { },
     output: { },
+    plugins: [ ],
     module: {
       loaders: [
         {
@@ -36,15 +37,13 @@ module.exports = function() {
             'file-loader?name=imgs/' + fileLoaderName, 
             'image-webpack-loader' + imageLoaderOptions
           ]
-        }, {
-          test: /\.css$/,
-          exclude: /(node_modules|bower_components)/,
-          loaders: [
-            'isomorphic-style-loader',
-            'css-loader?modules=true' + cssLoaderOptions,
-          ]
         }
       ]
     }
-  }
+  };
+
+  return {
+    webpackConfig: webpackConfig,
+    cssLoaderOptions: cssLoaderOptions
+  };
 };

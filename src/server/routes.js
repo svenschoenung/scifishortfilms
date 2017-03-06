@@ -27,7 +27,6 @@ const server = express();
 
 server.use((req, res) => {
 
-console.log(req.url);
   const handler = (error, redirect, renderProps) => {
     if (error) {
       renderErrorPage(error, req, res);
@@ -35,9 +34,11 @@ console.log(req.url);
       renderRedirect(redirect, req, res);
     } else if (renderProps) {
       try {
+        const css = new Set();
+        const insertCss = ((...styles) => styles.forEach(style => css.add(style._getCss())));
         const store = createStore(reducers, {});
         const app = renderToString(
-          <ManifestProvider manifest={manifest}>
+          <ManifestProvider manifest={manifest} insertCss={insertCss}>
             <Provider store={store}>
               <RouterContext {...renderProps} />
             </Provider>
@@ -46,7 +47,7 @@ console.log(req.url);
         const head = Helmet.rewind();
         const state = store.getState();
         const index = renderToStaticMarkup(
-          <Index app={app} manifest={manifest} head={head} state={state}/>
+          <Index app={app} manifest={manifest} head={head} state={state} css={css}/>
         );
         res.status(200).send('<!DOCTYPE html>' + index)
 
