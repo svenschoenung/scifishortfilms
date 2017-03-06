@@ -1,5 +1,6 @@
 const webpack2 = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 var { webpackConfig, cssLoaderOptions } = require('./webpack.js')();
 
@@ -11,8 +12,6 @@ webpackConfig.module.loaders.push({
   })
 });
 
-webpackConfig.plugins.push(new ExtractTextPlugin("app.css"));
-
 if (process.env.NODE_ENV == 'production') {
   var clientConfig = require('../config/client.prod.json');
 
@@ -22,6 +21,8 @@ if (process.env.NODE_ENV == 'production') {
   webpackConfig.output.publicPath = 'http://scifishortfilms.com/';
   webpackConfig.output.filename = 'app_[hash].min.js';
   webpackConfig.output.path = __dirname + '/../dist/client';
+  webpackConfig.plugins.push(new ExtractTextPlugin("app_[contenthash].css"));
+  webpackConfig.plugins.push(new ManifestPlugin());
 }
 
 if (process.env.NODE_ENV == 'development') {
@@ -37,6 +38,7 @@ if (process.env.NODE_ENV == 'development') {
   webpackConfig.output.filename = 'app.js';
   webpackConfig.output.path = __dirname + '/../build/client';
   webpackConfig.plugins.push(new webpack2.HotModuleReplacementPlugin());
+  webpackConfig.plugins.push(new ExtractTextPlugin("app.css"));
   webpackConfig.devServer = {
     inline: true,
     compress: false, 

@@ -9,6 +9,7 @@ var zip = require('gulp-zip');
 var webpack = require('webpack-stream');
 var webpack2 = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
+
 var del  = require('del');
 var open = require('open');
 
@@ -106,7 +107,8 @@ gulp.task('prod:clean', function() {
 });
 
 gulp.task('prod:client', function() {
-  var config = webpackConfig('prod');
+  env('production');
+  var config = require('./webpack/webpack.client.js');
   return gulp.src(config.entry.app)
     .pipe(webpack(config, webpack2))
     .pipe(gulp.dest(config.output.path));
@@ -136,6 +138,8 @@ gulp.task('prod:deps', shell.task([
 ]));
 
 gulp.task('prod:server', function() {
+  env('production');
+
   var stream = gulp.src([
     'src/server.js',
     'src/server/**',
