@@ -19,9 +19,9 @@ if (process.env.NODE_ENV == 'production') {
     './src/client.jsx'
   ];
   webpackConfig.output.publicPath = 'http://scifishortfilms.com/';
-  webpackConfig.output.filename = 'app_[hash].min.js';
+  webpackConfig.output.filename = 'app_[hash:10].min.js';
   webpackConfig.output.path = __dirname + '/../dist/client';
-  webpackConfig.plugins.push(new ExtractTextPlugin("app_[contenthash].css"));
+  webpackConfig.plugins.push(new ExtractTextPlugin("app_[contenthash:10].min.css"));
   webpackConfig.plugins.push(new ManifestPlugin());
 }
 

@@ -2,7 +2,7 @@ var webpack2 = require('webpack');
 
 module.exports = function() {
   if (process.env.NODE_ENV === 'production') {
-    var fileLoaderName = '[name]_[hash].[ext]';
+    var fileLoaderName = '[name]_[hash:10].[ext]';
     var imageLoaderOptions = '?optipng.optimizationLevel=4';
     var cssLoaderOptions = '&minimize=true&sourceMap=true';
   }
